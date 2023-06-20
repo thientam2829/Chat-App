@@ -1,0 +1,31 @@
+<div class="modal fade" id="notificationsModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">All notifications.</h4>
+            </div>
+            <div class="modal-body">
+                <div class="mark-notif-as-read">
+                    <a href="javascrip:void(0)" id="modal-mark-notif-as-read">
+                        <strong>Mark all as read</strong>
+                    </a>
+                </div>
+                <hr>
+                <ul class="list-notifications"> <!-- thêm .slice(-20) vào sau getNotiContents để giới hạn hiển thị là 20 -->
+                    <% getNotiContents.forEach(function(notiConctent_item, index){ %> 
+                        <li>
+                            <%- notiConctent_item %>
+                        </li>
+                    <% }); %>
+                </ul>
+                <hr>
+                <div class="read-more-motif">
+                    <a href="javascrip:void(0)" id="link-read-more-notif">
+                        <strong>Read more</strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>>

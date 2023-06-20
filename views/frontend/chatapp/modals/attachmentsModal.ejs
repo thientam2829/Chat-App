@@ -1,0 +1,65 @@
+<% member.forEach(function(member_item, index){ %>
+    <div class="modal fade" id="attachmentsModal_<%= member_item._id %>" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">All Attachments in this conversation.</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-attachments">
+                        <% messages.forEach(function(message_item, index){ %>
+                            <% if (message_item.conversationType.toString() === 'personal') { %>
+                                <% if (message_item.messageType.toString() === 'attachment'){ %>
+                                    <% if ((member_item._id.toString() === message_item.receiverId && user._id.toString() === message_item.senderId)
+                                        || (member_item._id.toString() === message_item.senderId && user._id.toString() === message_item.receiverId)) { %>
+                                        <li>
+                                            <a href="data:<%= message_item.file.contentType %>; base64,
+                                                <%= message_item.file.data.toString('base64') %>"
+                                                download="<%= message_item.file.fileName %>"
+                                                title="<%= moment(message_item.createdAt).locale('en').format('hh:mm:ss a, DD/MM/YYYY'); %>">
+                                                <%= message_item.file.fileName %>
+                                            </a>
+                                        </li>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        <% }) %>  
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<% }) %>
+
+<% group.forEach(function(group_item, index){ %>    
+    <div class="modal fade" id="attachmentsModal_<%= group_item._id %>" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">All Attachments in this conversation.</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-attachments">
+                        <% messages.forEach(function(message_item, index){ %>
+                            <% if (message_item.conversationType.toString() === 'group') { %>
+                                <% if (message_item.messageType.toString() === 'attachment'){ %>
+                                    <% if (message_item.receiverId.toString() === group_item._id.toString()) { %>
+                                        <li>
+                                            <a href="data:<%= message_item.file.contentType %>; base64,
+                                                <%= message_item.file.data.toString('base64') %>"
+                                                download="<%= message_item.file.fileName %>">
+                                                <%= message_item.file.fileName %>
+                                            </a>
+                                        </li>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        <% }) %>  
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+<% }) %>

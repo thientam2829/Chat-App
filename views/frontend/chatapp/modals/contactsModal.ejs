@@ -1,0 +1,167 @@
+<div class="modal fade" id="contactsModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Contact management</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#find-user">Search user</a></li>
+                    <!-- danh bạ -->
+                    <li><a data-toggle="tab" id="link-contacts" href="#contacts">
+                        Contacts list <!-- <span class="show-number-contacts count-contacts"></span> -->
+                    </a></li>
+                    <!-- đang chờ xác nhận -->
+                    <li><a data-toggle="tab" id="link-request-contact-sent" href="#request-contact-sent">
+                        Request contact sent <!-- <span class="show-number-contacts count-request-contact-sent"></span> -->
+                    </a></li>
+                    <!-- yêu cầu kết bạn -->
+                    <li><a data-toggle="tab" id="link-request-contact-received" href="#request-contact-received">
+                        Request contact received <!-- <span class="show-number-contacts count-request-contact-received"></span> -->
+                    </a></li>
+                </ul>
+                <div class="tab-content">
+                    <!-- tìm kiếm user chưa phải bạn bè -->
+                    <div id="find-user" class="tab-pane fade in active">
+                        <div class="find-user-top">
+                            <div class="input-group col-md-12">
+                                <input type="text" class="form-control" id="input-search-user-to-add-contact" placeholder="Enter the email or username" />
+                                <span class="input-group-btn">
+                                    <button id="btn-search-user-to-add-contact" class="btn btn-lg" type="button">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="find-user-bottom">
+                            <ul class="contact-list">
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- danh sách bạn bè -->
+                    <div id="contacts" class="tab-pane fade">
+                        <div class="find-user-bottom">
+                            <ul class="contactList">
+                                <% member.forEach(function(member_item, index){ %>
+                                    <% contacts.forEach(function(contact_item, index){ %> 
+                                        <% if (contact_item.status === true) { %>
+                                            <% if (member_item._id.toString() !== user._id.toString()) { %>
+                                                <% if ((contact_item.memberId.toString() === user._id.toString())
+                                                || (contact_item.contactId.toString() === user._id.toString())) { %>
+                                                    <% if ((contact_item.contactId.toString() === member_item._id.toString())
+                                                    || contact_item.memberId.toString() === member_item._id.toString()) { %>
+                                                        <li class="_contactList" data-uid="<%= member_item._id %>">
+                                                            <div class="contactPanel">
+                                                                <div class="user-avatar">
+                                                                    <img src="<%= member_item.image_path %>" alt="">
+                                                                </div>
+                                                                <div class="user-name">
+                                                                    <p>
+                                                                        <%= member_item.info.firstname %> <%= member_item.info.lastname %>
+                                                                    </p>
+                                                                </div>
+                                                                <br>
+                                                                <div class="user-address">
+                                                                    <span>&nbsp <%= member_item.local.email %></span>
+                                                                </div>
+                                                                <div class="user-talk" data-uid="<%= member_item._id %>">
+                                                                    Chatting
+                                                                </div>
+                                                                <div class="user-remove-contact action-danger" data-uid="<%= member_item._id %>">
+                                                                    Delete contact
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    <% } %>
+                                                <% } %>
+                                            <% } %>
+                                        <% } %>
+                                    <% }); %>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- đã gửi lời mời, đang chời xác nhận -->
+                    <div id="request-contact-sent" class="tab-pane fade">
+                        <div class="find-user-bottom">
+                            <ul class="contactList">
+                                <% member.forEach(function(member_item, index){ %>
+                                    <% contacts.forEach(function(contact_item, index){ %> 
+                                        <% if (contact_item.status === false) { %>
+                                            <% if (member_item._id.toString() !== user._id.toString()) { %>
+                                                <% if ((contact_item.memberId.toString() === user._id.toString())
+                                                && (contact_item.contactId.toString() === member_item._id.toString())) { %>
+                                                    <li class="_contactList" data-uid="<%= member_item._id %>">
+                                                        <div class="contactPanel">
+                                                            <div class="user-avatar">
+                                                                <img src="<%= member_item.image_path %>" alt="">
+                                                            </div>
+                                                            <div class="user-name">
+                                                                <p>
+                                                                    <%= member_item.info.firstname %> <%= member_item.info.lastname %>
+                                                                </p>
+                                                            </div>
+                                                            <br>
+                                                            <div class="user-address">
+                                                                <span>&nbsp <%= member_item.local.email %></span>
+                                                            </div>
+                                                            <div class="user-remove-request-sent action-danger" data-uid="<%= member_item._id %>">
+                                                                Cancel request
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                <% } %>
+                                            <% } %>
+                                        <% } %>
+                                    <% }); %>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- lời mời nhận được, đang chờ xác nhận -->
+                    <div id="request-contact-received" class="tab-pane fade">
+                        <div class="find-user-bottom">
+                            <ul class="contactList">
+                                <% member.forEach(function(member_item, index){ %>
+                                    <% contacts.forEach(function(contact_item, index){ %> 
+                                        <% if (contact_item.status === false) { %>
+                                            <% if (member_item._id.toString() !== user._id.toString()) { %>
+                                                <% if ((contact_item.contactId.toString() === user._id.toString())
+                                                && (contact_item.memberId.toString() === member_item._id.toString())) { %>
+                                                    <li class="_contactList" data-uid="<%= member_item._id %>">
+                                                        <div class="contactPanel">
+                                                            <div class="user-avatar">
+                                                                <img src="<%= member_item.image_path %>" alt="">
+                                                            </div>
+                                                            <div class="user-name">
+                                                                <p>
+                                                                    <%= member_item.info.firstname %> <%= member_item.info.lastname %>
+                                                                </p>
+                                                            </div>
+                                                            <br>
+                                                            <div class="user-address">
+                                                                <span>&nbsp <%= member_item.local.email %></span>
+                                                            </div>
+                                                            <div class="user-acccept-contact-received" data-uid="<%= member_item._id %>">
+                                                                Accept
+                                                            </div>
+                                                            <div class="user-reject-request-contact-received action-danger" data-uid="<%= member_item._id %>">
+                                                                Reject
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                <% } %>
+                                            <% } %>
+                                        <% } %>
+                                    <% }); %>
+                                <% }); %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,217 @@
+<div class="col-sm-9 sidenav no-padding">
+    <div class="tab-content" id="screen_chat">
+        <!-- person -->
+        <!-- <div class="right tab-pane active" data-chat="<%= user._id %>" id="to_<%= user._id %>" style="color: black; text-align: center;">
+            <h3 style="margin-top: 25%;">WELCOME TO WEBCHAT</h3>
+            <h4>Hello <b style="color: green;"><%= user.info.firstname %> <%= user.info.lastname %></b></h4>
+        </div> -->
+
+        <!-- chat personal -->
+        <% member.forEach(function(member_item, index){ %>
+            <div class="right tab-pane" data-chat="<%= member_item._id %>" id="to_<%= member_item._id %>"> <!-- thêm vào class để active phần tử đầu: <% if(index === 0) { %> active <% } %> -->
+                
+                <div class="top">
+                    <span>To: <span class="name"><%= member_item.info.firstname %> <%= member_item.info.lastname %></span></span>
+                    <span class="chat-menu-right">
+                        <a href="#attachmentsModal_<%= member_item._id %>" class="show-attachments" data-toggle="modal">
+                            Attachments
+                            <i class="fa fa-paperclip"></i>
+                        </a>
+                    </span>
+                    <span class="chat-menu-right">
+                        <a href="javascript:void(0)">&nbsp;</a>
+                    </span>
+                    <span class="chat-menu-right">
+                        <a href="#imagesModal_<%= member_item._id %>" class="show-images" data-toggle="modal">
+                            Images
+                            <i class="fa fa-photo"></i>
+                        </a>
+                    </span>
+                </div>
+                
+                <div class="content-chat">
+                    <div class="chat" data-chat="<%= member_item._id %>">
+                        <% messages.forEach(function(message_item, index){ %>
+                            <% if (message_item.conversationType === 'personal') { %>
+                                <% if ((member_item._id.toString() === message_item.receiverId && user._id.toString() === message_item.senderId)
+                                || (member_item._id.toString() === message_item.senderId && user._id.toString() === message_item.receiverId)) { %>
+                                    <!-- kiểu text -->
+                                    <% if (message_item.messageType === 'text') { %>
+                                        <div id="last_mess_personal_text" class="bubble
+                                            <% if(message_item.senderId.toString() === user._id.toString()) { %> me
+                                            <% } else { %> you <% } %>"
+                                            data-mess-id="<%= message_item._id %>">
+                                            <!-- <img class="avatar-small" src="<%= message_item.sender.avatar %>" title="<%= message_item.sender.name %>" alt="<%= message_item.sender.avatar %>"> -->
+                                            <span id="text-chat"><%= message_item.text %></span>
+                                            <span id="time-chat-to-get" style="display: none;"><%= message_item.createdAt %></span>
+                                            <span id="member-id-chat" style="display: none;"><%= member_item._id %></span>
+                                            <br>
+                                            <span class="time-chat"><%= moment(message_item.createdAt).locale('en').format('hh:mm:ss a, DD/MM/YYYY'); %></span>
+                                        </div>
+                                    <% } %>
+                                    <!-- kiểu hình ảnh -->
+                                    <% if (message_item.messageType === 'image') { %>
+                                        <div id="last_mess_personal_image" class="bubble bubble-image-file
+                                        <% if(message_item.senderId.toString() === user._id.toString()) { %> me
+                                            <% } else { %> you <% } %>" data-mess-id="<%= message_item._id %>">
+                                            <!-- ảnh được lưu ở dạng buffer nên sẽ thị ở dạng hình ảnh string base64 -->
+                                            <img src="data:<%= message_item.file.contentType %>; base64, <%= message_item.file.data.toString('base64') %>"
+                                            class="show-image-chat" title="<%= moment(message_item.createdAt).locale('en').format('hh:mm:ss a, DD/MM/YYYY'); %>">
+                                            <span id="time-chat-to-get" style="display: none;"><%= message_item.createdAt %></span>
+                                            <span id="member-id-chat" style="display: none;"><%= member_item._id %></span>
+                                        </div>
+                                    <% } %>
+                                    <!-- kiểu tệp đính kèm (attachment) -->
+                                    <% if (message_item.messageType === 'attachment') { %>
+                                        <div id="last_mess_personal_attachment" class="bubble bubble-attachments-file
+                                        <% if(message_item.senderId.toString() === user._id.toString()) { %> me
+                                            <% } else { %> you <% } %>" data-mess-id="<%= message_item._id %>">
+                                            <a href="data:<%= message_item.file.contentType %>; base64, <%= message_item.file.data.toString('base64') %>"
+                                                download="<%= message_item.file.fileName %>" title="<%= moment(message_item.createdAt).locale('en').format('hh:mm:ss a, DD/MM/YYYY'); %>">
+                                                <%= message_item.file.fileName %>
+                                            </a>
+                                            <span id="time-chat-to-get" style="display: none;"><%= message_item.createdAt %></span>
+                                            <span id="member-id-chat" style="display: none;"><%= member_item._id %></span>
+                                        </div>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        <% }); %>
+                    </div>
+                </div>
+                
+                <div class="write" data-chat="<%= member_item._id %>">
+                    <input type="text" class="write-chat" id="write-chat-<%= member_item._id %>" data-chat="<%= member_item._id %>">
+                    <div class="icons">
+                        <a href="#" class="icon-chat" data-chat="<%= member_item._id %>"><i class="fa fa-smile-o"></i></a>
+                        <label for="image-chat-<%= member_item._id %>">
+                            <input type="file" id="image-chat-<%= member_item._id %>" name="my-image-chat"
+                            class="image-chat" data-chat="<%= member_item._id %>">
+                            <i class="fa fa-photo"></i>
+                        </label>
+                        <label for="attachments-chat-<%= member_item._id %>">
+                            <input type="file" id="attachments-chat-<%= member_item._id %>" name="my-attachments-chat"
+                            class="attachments-chat" data-chat="<%= member_item._id %>">
+                            <i class="fa fa-paperclip"></i>
+                        </label>
+                        <a href="javascript:void(0)" id="video-chat-<%= member_item._id %>" 
+                        class="video-chat" data-chat="<%= member_item._id %>">
+                            <i class="fa fa-video-camera"></i>
+                        </a>
+                    </div>
+                </div>
+            
+            </div>
+        <% }); %>
+        
+        <!-- chat group -->
+        <% group.forEach(function(group_item, index){ %>
+            <div class="right tab-pane" data-chat="<%= group_item._id %>" id="to_<%= group_item._id %>">
+                
+                <div class="top">
+                    <span>To: <span class="name"><%= group_item.name %></span></span>
+                    <span class="chat-menu-right">
+                        <a href="#memberGroup_<%= group_item._id %>" data-toggle="modal" data-target="#memberGroup_<%= group_item._id %>">
+                            Members (<%= group_item.members.length %>) &nbsp;
+                            <i class="fa fa-users"></i>
+                        </a>
+                    </span>
+                    <span class="chat-menu-right">
+                        <a href="#attachmentsModal_<%= group_item._id %>" class="show-attachments" data-toggle="modal">
+                            Attachments
+                            <i class="fa fa-paperclip"></i>
+                        </a>
+                    </span>
+                    <span class="chat-menu-right">
+                        <a href="javascript:void(0)">&nbsp;</a>
+                    </span>
+                    <span class="chat-menu-right">
+                        <a href="#imagesModal_<%= group_item._id %>" class="show-images" data-toggle="modal">
+                            Images
+                            <i class="fa fa-photo"></i>
+                        </a>
+                    </span>
+                </div>
+                
+                <div class="content-chat">
+                    <div class="chat" data-chat="<%= group_item._id %>">
+                        <% messages.forEach(function(message_item, index){ %>
+                            <% if (message_item.conversationType === 'group') { %>
+                                <% if (group_item._id.toString() === message_item.receiverId) { %>
+                                    <!-- kiểu text -->
+                                    <% if (message_item.messageType === 'text') { %>
+                                        <div id="last_mess_group_text" class="bubble
+                                            <% if(message_item.senderId.toString() === user._id.toString()) { %> me
+                                            <% } else { %> you <% } %>"
+                                            data-mess-id="<%= message_item._id %>">
+                                            <img class="avatar-small" src="<%= message_item.sender.avatar %>" title="<%= message_item.sender.name %>"
+                                            alt="<%= message_item.sender.avatar %>">
+                                            <span id="text-chat"><%= message_item.text %></span>
+                                            <span id="time-chat-to-get" style="display: none;"><%= message_item.createdAt %></span>
+                                            <span id="member-id-chat" style="display: none;"><%= group_item._id %></span>
+                                            <span id="time-chat-to-get" style="display: none;"><%= message_item.sender.name %></span>
+                                            <br>
+                                            <span class="time-chat"><%= moment(message_item.createdAt).locale("en").format('hh:mm:ss a, DD/MM/YYYY'); %></span>
+                                        </div>
+                                    <% } %>
+                                    <!-- kiểu hình ảnh -->
+                                    <% if (message_item.messageType === 'image') { %>
+                                        <div id="last_mess_group_image" class="bubble bubble-image-file
+                                        <% if(message_item.senderId.toString() === user._id.toString()) { %> me
+                                            <% } else { %> you <% } %>" data-mess-id="<%= message_item._id %>">
+                                            <img class="avatar-small" src="<%= message_item.sender.avatar %>" title="<%= message_item.sender.name %>"
+                                            alt="<%= message_item.sender.avatar %>">
+                                            <!-- ảnh được lưu ở dạng buffer nên sẽ thị ở dạng hình ảnh string base64 -->
+                                            <img src="data:<%= message_item.file.contentType %>; base64, <%= message_item.file.data.toString('base64') %>"
+                                            class="show-image-chat" title="<%= moment(message_item.createdAt).locale('en').format('hh:mm:ss a, DD/MM/YYYY'); %>">
+                                            <span id="time-chat-to-get" style="display: none;"><%= message_item.createdAt %></span>
+                                            <span id="member-id-chat" style="display: none;"><%= group_item._id %></span>
+                                            <span id="time-chat-to-get" style="display: none;"><%= message_item.sender.name %></span>
+                                        </div>
+                                    <% } %>
+                                    <!-- kiểu tệp đính kèm (attachment) -->
+                                    <% if (message_item.messageType === 'attachment') { %>
+                                        <div id="last_mess_group_attachment" class="bubble bubble-attachments-file
+                                        <% if(message_item.senderId.toString() === user._id.toString()) { %> me
+                                            <% } else { %> you <% } %>" data-mess-id="<%= message_item._id %>">
+                                            <img class="avatar-small" src="<%= message_item.sender.avatar %>" title="<%= message_item.sender.name %>"
+                                            alt="<%= message_item.sender.avatar %>">
+                                            <a href="data:<%= message_item.file.contentType %>; base64, <%= message_item.file.data.toString('base64') %>"
+                                                download="<%= message_item.file.fileName %>" title="<%= moment(message_item.createdAt).locale('en').format('hh:mm:ss a, DD/MM/YYYY'); %>">
+                                                <%= message_item.file.fileName %>
+                                            </a>
+                                            <span id="time-chat-to-get" style="display: none;"><%= message_item.createdAt %></span>
+                                            <span id="member-id-chat" style="display: none;"><%= group_item._id %></span>
+                                            <span id="time-chat-to-get" style="display: none;"><%= message_item.sender.name %></span>
+                                        </div>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        <% }); %>
+                    </div>
+                </div>
+                
+                <div class="write" data-chat="<%= group_item._id %>">
+                    <input type="text" class="write-chat chat-in-group" id="write-chat-<%= group_item._id %>" data-chat="<%= group_item._id %>">
+                    <div class="icons">
+                        <a href="#" class="icon-chat" data-chat="<%= group_item._id %>"><i class="fa fa-smile-o"></i></a>
+                        <label for="image-chat-<%= group_item._id %>">
+                            <input type="file" id="image-chat-<%= group_item._id %>" name="my-image-chat"
+                            class="image-chat chat-in-group" data-chat="<%= group_item._id %>">
+                            <i class="fa fa-photo"></i>
+                        </label>
+                        <label for="attachments-chat-<%= group_item._id %>">
+                            <input type="file" id="attachments-chat-<%= group_item._id %>" name="my-attachments-chat"
+                            class="attachments-chat chat-in-group" data-chat="<%= group_item._id %>">
+                            <i class="fa fa-paperclip"></i>
+                        </label>
+                        <!-- <a href="#streamModal" id="video-chat" class="video-chat" data-chat="<%= group_item._id %>" data-toggle="modal">
+                            <i class="fa fa-video-camera"></i>
+                        </a> -->
+                    </div>
+                </div>
+            
+            </div>
+        <% }); %>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= pageTitle %></title>
+    <% include ../../layouts/stylesheet %>
+</head>
+<body>
+    <% include ../../layouts/navbar %>
+    
+    <div class="container-fluid main-content">
+        <div class="row content">
+            <!-- left -->
+            <% include sections/leftSidenav %>
+            <!-- right -->
+            <% include sections/rightSidenav %>
+
+            <!-- modal tao group chat moi -->
+            <% include modals/createGroupChatModal %>
+            <!-- modal danh sách thành viên group -->
+            <% include modals/memberOfGroupModal %>
+            <!-- modal profile -->
+            <% include modals/editProfileModal %>
+            <!-- video-chat -->
+            <% include modals/videoChatModal %>
+            <!-- danh sách hình ảnh (iamge) -->
+            <% include modals/imagesModal %>
+            <!-- danh sách tệp đính kèm (attachments) -->
+            <% include modals/attachmentsModal %>
+            <!-- contacts -->
+            <% include modals/contactsModal %>
+            <!-- notification - tất cả thông báo -->
+            <% include modals/allNotifications %>
+            <!-- profile modal -->
+            <% include modals/profileModal %>
+            <!-- change password modal -->
+            <% include modals/changePasswordModal %>
+        </div>
+        <!-- <b style="float: right; color: honeydew; margin-top: 3px;">Make by Châu Nguyễn</b> -->
+
+        <input type="hidden" name="currentUserId" id="currentUserId" value="<%= user._id %>">
+        <input type="hidden" name="currentUserName" id="currentUserName" value="<%= user.info.firstname %> <%= user.info.lastname %>">
+        <input type="hidden" name="currentUserEmail" id="currentUserEmail" value="<%= user.local.email %>">
+
+        <% if (messagesWelcome) {%>
+            <input type="hidden" name="messages" id="messages" value="<%= messagesWelcome %>">
+        <% } else if (messagesChangepassword) { %>
+            <input type="hidden" name="messages" id="messages" value="<%= messagesChangepassword %>">
+        <% } else if (messageEditProfile) { %>
+            <input type="hidden" name="messages" id="messages" value="<%= messageEditProfile %>">
+        <% } %>
+
+        <% if (errorChangepassword) { %>
+            <input type="hidden" name="messagesError" id="messagesError" value="<%= errorChangepassword %>">
+        <% } %>
+    </div>
+
+    <% include ../../layouts/script %>
+</body>
+    <script>
+        var messages = $('#messages').val();
+        if (messages) {
+            alertify.success(messages);
+        }
+        var messagesError = $('#messagesError').val();
+        if (messagesError) {
+            alertify.error(messagesError);
+        }
+
+        // gửi id người vừa đăng nhập lên server để cập nhật danh sách online
+        var currentId = $('#currentUserId').val();
+        if (currentId) {
+            socket.emit("client-login", currentId);
+        }
+
+        $(document).ready(function() {
+            // gửi sự kiện login lên server || mỗi lần có client logout, sẽ tự động cập nhật ở đây, vì dùng chung tên sự kiện (list-clients-online)
+            socket.on("list-clients-online", function(clients) {
+                $(`.left ul.people li .left-avatar .dot`).removeClass("online");
+                for (var clientId of clients) {
+                    $(`.left ul.people li[data-chat=${clientId}] .left-avatar .dot`).addClass("online");
+                }
+            })
+        })
+    </script>
+</html>

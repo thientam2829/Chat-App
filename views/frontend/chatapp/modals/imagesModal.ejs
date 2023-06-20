@@ -1,0 +1,54 @@
+<% member.forEach(function(member_item, index){ %>
+    <div class="modal fade" id="imagesModal_<%= member_item._id %>" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">All Images in this conversation.</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="all-images" style="visibility: visible;">
+                        <% messages.forEach(function(message_item, index){ %>
+                            <% if (message_item.conversationType.toString() === 'personal') { %>
+                                <% if (message_item.messageType.toString() === 'image'){ %>
+                                    <% if ((member_item._id.toString() === message_item.receiverId && user._id.toString() === message_item.senderId)
+                                        || (member_item._id.toString() === message_item.senderId && user._id.toString() === message_item.receiverId)) { %>
+                                            <img src="data:<%= message_item.file.contentType %>; base64, <%= message_item.file.data.toString('base64') %>"
+                                            class="show-image-chat" title="<%= moment(message_item.createdAt).locale('en').format('hh:mm:ss a, DD/MM/YYYY'); %>">
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        <% }) %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% }) %>
+
+<% group.forEach(function(group_item, index){ %>    
+    <div class="modal fade" id="imagesModal_<%= group_item._id %>" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">All Images in this conversation.</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="all-images" style="visibility: visible;">
+                        <% messages.forEach(function(message_item, index){ %>
+                            <% if (message_item.conversationType.toString() === 'group') { %>
+                                <% if (message_item.messageType.toString() === 'image'){ %>
+                                    <% if (message_item.receiverId.toString() === group_item._id.toString()) { %>
+                                        <img src="data:<%= message_item.file.contentType %>; base64, <%= message_item.file.data.toString('base64') %>"
+                                            class="show-image-chat" title="<%= moment(message_item.createdAt).locale('en').format('hh:mm:ss a, DD/MM/YYYY'); %>">
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        <% }) %>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% }) %>

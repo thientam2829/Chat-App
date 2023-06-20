@@ -1,0 +1,49 @@
+<% group.forEach(function(group_item, index){ %>
+    
+    <div class="modal fade" id="memberGroup_<%= group_item._id %>" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Members list: <span class="group-chat-name"><%= group_item.name %></span></h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-members">
+                        <% member.forEach(function(member_item, index){ %>
+                            <% group_item.members.map(function(item){ %>
+                                <% if (item.toString() === member_item._id.toString()) { %>
+                                    <div data-uid="<%= member_item._id %>">
+                                        <li data-uid="<%= member_item._id %>">
+                                            <div class="contactPanel">
+                                                <div class="row"></div>
+                                                <div class="user-avatar">
+                                                    <img src="<%= member_item.image_path %>" alt="">
+                                                </div>
+                                                <div class="user-name">
+                                                    <p>
+                                                        <% if (group_item.user_id.toString() === member_item._id.toString()) { %>
+                                                            &nbsp <%= member_item.info.firstname %> <%= member_item.info.lastname %>
+                                                            <span class="group-chat-name">&nbsp (Owner)</span>
+                                                        <% } else { %>
+                                                            &nbsp <%= member_item.info.firstname %> <%= member_item.info.lastname %>
+                                                        <% } %>
+                                                    </p>
+                                                </div>
+                                                <br>
+                                                <div class="user-address">
+                                                    &nbsp <%= member_item.local.email %>
+                                                </div>
+                                                
+                                            </div>
+                                        </li>
+                                    </div>
+                                <% } %>
+                            <% }) %>
+                        <% }) %>           
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+<% }) %>

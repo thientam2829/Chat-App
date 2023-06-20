@@ -1,0 +1,170 @@
+<div class="col-sm-3 sidenav no-padding">
+    <div class="left">
+        <div class="top form-group">
+            <select class="form-control" id="select-type-chat">
+                <option data-target="#all-chat" value="all-chat">All conversation</option>
+                <option data-target="#user-chat" value="personal-chat">Personal conversation</option>
+                <option data-target="#group-chat" value="group-chat">Group conversation</option>
+            </select>
+            <a href="#groupChatModal" class="create-group-chat" data-toggle="modal" title="Create a new group"></a>
+        </div>
+        <!-- all chat -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="all-chat">
+                <ul class="people no-padding-start person_chat">
+                    <% member.forEach(function(member_item, index){ %>
+                        <% contacts.forEach(function(contact_item, index){ %> 
+                            <% if (contact_item.status === true) { %>
+                                <% if (member_item._id.toString() !== user._id.toString()) { %>
+                                    <% if ((contact_item.memberId.toString() === user._id.toString())
+                                    || (contact_item.contactId.toString() === user._id.toString())) { %>
+                                        <% if ((contact_item.contactId.toString() === member_item._id.toString())
+                                        || contact_item.memberId.toString() === member_item._id.toString()) { %>
+                                            <a href="#uid_<%= member_item._id %>" class="room-chat" id="null-contact" data-target="#to_<%= member_item._id %>">
+                                                <li class="person" data-chat="<%= member_item._id %>">
+                                                    <div class="left-avatar">
+                                                        <!-- <div class="dot online"></div> -->
+                                                        <div class="status dot"></div>
+                                                        <img src="<%= member_item.image_path %>" alt="">
+                                                    </div>
+                                                    <span class="name">
+                                                        <% if(member_item.info.firstname.length + member_item.info.lastname.length > 15) { %>
+                                                            <%= member_item.info.firstname %> <%= member_item.info.lastname.substring(0, member_item.info.lastname.length - (member_item.info.lastname.length - 10) ) %><span>...</span>
+                                                        <% } else { %>
+                                                            <%= member_item.info.firstname %> <%= member_item.info.lastname %>
+                                                        <% } %>
+                                                    </span><br>
+                                                    <span class="time"></span>
+                                                    <span class="preview"></span>
+                                                </li>
+                                            </a>
+                                        <% } %>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        <% }); %>
+                    <% }); %>
+                </ul>
+
+                <ul class="people no-padding-start group">
+                    <% group.forEach(function(group_item, index){ %>
+                        <% group_item.members.map(function(item){ %>
+                            <% if (item.toString() === user._id.toString()) { %>
+                                <a href="#gid_<%= group_item._id %>" class="room-chat" data-target="#to_<%= group_item._id %>">
+                                    <li class="person group-chat" data-chat="<%= group_item._id %>">
+                                        <div class="left-avatar">
+                                            <!-- <div class="dot"></div> -->
+                                            <img src="<%= group_item.image_path %>" alt="">
+                                        </div>
+
+                                        <span class="name">
+                                            <span class="group-chat-name">
+                                                <% if(group_item.name.length > 15) { %>
+                                                    <%= group_item.name.substring(0, 14) %><span>...</span>
+                                                <% } else { %>
+                                                    <%= group_item.name %>
+                                                <% } %>
+                                            </span>
+                                        </span>
+                                        <span class="time"></span>
+                                        <span class="preview"></span>
+                                    </li>
+                                </a>
+                            <% } %>
+                        <% }) %>
+                    <% }); %>
+                </ul>
+
+                <!-- <div class="read-more-all-chat">
+                    <a href="javascript:void(0)" id="link-read-more-all-chat">
+                        <strong>Load more...</strong>
+                    </a>
+                    <div class="read-more-all-chat-loader"></div>
+                </div> -->
+            </div>
+
+            <!-- user chat -->
+            <div class="tab-pane" id="user-chat">
+                <ul class="people no-padding-start">
+                    <% member.forEach(function(member_item, index){ %>
+                        <% contacts.forEach(function(contact_item, index){ %> 
+                            <% if (contact_item.status === true) { %>
+                                <% if (member_item._id.toString() !== user._id.toString()) { %>
+                                    <% if ((contact_item.memberId.toString() === user._id.toString())
+                                    || (contact_item.contactId.toString() === user._id.toString())) { %>
+                                        <% if ((contact_item.contactId.toString() === member_item._id.toString())
+                                        || contact_item.memberId.toString() === member_item._id.toString()) { %>
+                                            <a href="#uid_<%= member_item._id %>" class="room-chat" id="null-contact" data-target="#to_<%= member_item._id %>">
+                                                <li class="person" data-chat="<%= member_item._id %>">
+                                                    <div class="left-avatar">
+                                                        <!-- <div class="dot online"></div> -->
+                                                        <div class="status dot"></div>
+                                                        <img src="<%= member_item.image_path %>" alt="">
+                                                    </div>
+                                                    <span class="name">
+                                                        <% if(member_item.info.firstname.length + member_item.info.lastname.length > 15) { %>
+                                                            <%= member_item.info.firstname %> <%= member_item.info.lastname.substring(0, member_item.info.lastname.length - (member_item.info.lastname.length - 10) ) %><span>...</span>
+                                                        <% } else { %>
+                                                            <%= member_item.info.firstname %> <%= member_item.info.lastname %>
+                                                        <% } %>
+                                                    </span><br>
+                                                    <span class="time"></span>
+                                                    <span class="preview"></span>
+                                                </li>
+                                            </a>
+                                        <% } %>
+                                    <% } %>
+                                <% } %>
+                            <% } %>
+                        <% }); %>
+                    <% }); %>
+                </ul>
+                
+                <!-- <div class="read-more-user-chat">
+                    <a href="javascript:void(0)" id="link-read-more-user-chat">
+                        <strong>Load more...</strong>
+                    </a>
+                    <div class="read-more-user-chat-loader"></div>
+                </div> -->
+            </div>
+
+            <!-- group chat -->
+            <div class="tab-pane" id="group-chat">
+                <ul class="people no-padding-start group">
+                    <% group.forEach(function(group_item, index){ %>
+                        <% group_item.members.map(function(item){ %>
+                            <% if (item.toString() === user._id.toString()) { %>
+                                <a href="#gid_<%= group_item._id %>" class="room-chat" data-target="#to_<%= group_item._id %>">
+                                    <li class="person group-chat" data-chat="<%= group_item._id %>">
+                                        <div class="left-avatar">
+                                            <!-- <div class="dot"></div> -->
+                                            <img src="<%= group_item.image_path %>" alt="">
+                                        </div>
+                                        <span class="name">
+                                            <span class="group-chat-name">
+                                                <% if(group_item.name.length > 15) { %>
+                                                    <%= group_item.name.substring(0, 14) %><span>...</span>
+                                                <% } else { %>
+                                                    <%= group_item.name %>
+                                                <% } %>
+                                            </span>
+                                        </span>
+                                        <span class="time"></span>
+                                        <span class="preview"></span>
+                                    </li>
+                                </a>
+                            <% } %>
+                        <% }) %>
+                    <% }); %>
+                </ul>
+                
+                <!-- <div class="read-more-group-chat">
+                    <a href="javascript:void(0)" id="link-read-more-group-chat">
+                        <strong>Load more...</strong>
+                    </a>
+                    <div class="read-more-group-chat-loader"></div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+<nav class="navbar-inverse no-margin-bottom">
+    <div class="container-fluid">
+        <div class="navbar-header col-sm-3 navbar-left">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="chatapp">Yahoo Messenger !</a>
+        </div>
+        <div class="col-sm-3 no-padding">
+            <ul class="nav navbar-nav navbar-left no-padding-start">
+                <li>
+                    <input type="text" name="search" class="searchBox" placeholder="Search...">
+                    <div id="search-results">
+                        <h3>Result</h3>
+                        <div class="search_content">
+                            <ul></ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse col-sm-6 navbar-right" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- <% if(user.roles === 'ADMIN') { %>
+                <li>
+                    <a href="/" title="Dashboard">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                <% } %> -->
+                <li>
+                    <a href="#contactsModal" data-toggle="modal" title="Contact management" id="show-modal-contacts">
+                        <i class="fa fa-user-plus"></i>
+                        <div class="noti_contact_counter"></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascrip:void(0)" id="noti_Button" data-toggle="modal" title="Notification">
+                        <i class="fa fa-globe"></i>
+                        <% if(countNotiUnRead> 0) { %>
+                            <div class="noti_counter">
+                                <%= countNotiUnRead %>
+                            </div>
+                            <% } else { %>
+                                <div class="noti_counter display-none"></div>
+                                <% } %>
+                                    <div id="noti_Container">
+                                        <div id="notifications">
+                                            <!-- thông báo -->
+                                            <a href="javascrip:void(0)" id="popup-mark-notif-as-read">Mark all as
+                                                read</a>
+                                            <div class="noti_content">
+                                                <!-- để hiển thị được, lưu ý phải dùng <%- %> -->
+                                                <% getNotiContents.forEach(function(notiConctent_item, index){ %>
+                                                    <%- notiConctent_item %>
+                                                        <% }); %>
+                                            </div>
+                                            <!-- <div class="seeAll"><a href="#notificationsModal" data-toggle="modal">See all</a></div> -->
+                                            <div class="seeAll"><a href="javascrip:void(0)" data-toggle="modal"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                    </a>
+                </li>
+                <li class="dropdown" id="dropdown-navbar-user" data-uid="<%= user._id %>">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img id="currentUserAvatar" class="avatar-small" src="<%= user.image_path %>" alt="">
+                        <span id="navbar-username">
+                            <%= user.info.firstname %>
+                                <%= user.info.lastname %>
+                        </span>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#profileModal" data-toggle="modal">
+                                <i class="fa fa-user"></i>
+                                &nbsp;Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#changePasswordModal" data-toggle="modal">
+                                <i class="fa fa-cog"></i>
+                                &nbsp;Change Password
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/logout">
+                                <i class="fa fa-sign-out"></i>
+                                &nbsp;Logout
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

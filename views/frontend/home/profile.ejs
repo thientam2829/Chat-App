@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= pageTitle %></title>
+    <% include ../../layouts/stylesheet %>
+    <% include ../../layouts/script %>
+</head>
+<body>
+    <% include ../../layouts/navbar %>
+    <br>
+    <div class="container">
+        <h4>Profile</h4><hr>
+        <form action="/profile/edit-profile" method="POST" id="edit_profile_form" role="form" enctype="multipart/form-data"> <!-- enctype="multipart/form-data" -->
+            <div class="row profile">
+                <div class="col-md-4 avatar">
+                    <div class="card">
+                        <div class="card-header"></div>
+                        <div class="card-block">
+                            <img src="<%= user.image_path %>" alt="Avatar" id="image-upload">
+                            <div class="form-group mt-3">
+                                <label for="upload-path">
+                                    <input type="file" class="form-control image-chat" id="upload-path" name="image_path">
+                                    <i class="fa fa-photo"></i><p>Choose new avatar</p>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 info">
+                    <div class="card">
+                        <div class="card-header"></div>
+                        <div class="card-block">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Firstname<i style = color:red>*</i></label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="firstname" name="firstname" value="<%= user.info.firstname %>" placeholder="Enter firstname">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Lastname<i style = color:red>*</i></label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="lastname" name="lastname" value="<%= user.info.lastname %>" placeholder="Enter lastname">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">E-mail</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="email" value="<%= user.local.email %>" placeholder="" required disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Roles</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="roles" value="<%= user.roles %>" placeholder="" required disabled>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label class="col-sm-2"></label>
+                                <div class="col-sm-10">
+                                    <button id="edit_submit_btn" type="button" class="btn btn-primary m-b-0" onclick="return validateForm(event)">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+    <script>
+        // load iamge
+        function readImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#image-upload').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $('#upload-path').change(function () {
+            readImage(this);
+        });
+        // validate form
+        function validateForm(event) {
+            var firstname = document.getElementById("firstname").value;
+            var lastname = document.getElementById("lastname").value;
+
+            if(firstname == ""){
+                var mess = '<b>Please enter your firstname!</b>';
+                alertify.error(mess);
+                return false;
+            }
+            else if(lastname == "") {
+                var mess = '<b>Please enter your lastname!</b>';
+                alertify.error(mess);
+                return false;
+            }
+            else {
+                // form xác nhận thay đổi
+                var mess = '<b>Are you sure you want to save changes?</b>';
+                alertify.set({ labels: { ok: "Ok", cancel: "Cancel" } });
+                alertify.confirm( mess, function (e) {
+                    if (e) {
+                        // alertify.success("You've clicked OK");
+                        $('#edit_profile_form').submit();
+                        return true;
+                    } else {
+                        alertify.error("Canceled");
+                        return false;
+                        // alertify.error("You've clicked Cancel");
+                    }
+                });
+                // $('#edit_profile_form').submit();
+                // return true;
+            }
+        }
+    </script>
+</html>
